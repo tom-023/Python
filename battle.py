@@ -3,6 +3,7 @@ import openpyxl as px
 import requests
 from openpyxl.styles import PatternFill
 from bs4 import BeautifulSoup
+from IPython import embed
 
 def teamcrawling(division):
     if division == 'J1':
@@ -40,7 +41,7 @@ def write_excel(data_list):
         # セルを塗りつぶす
         ws.cell(row=1, column=1+i).fill = fill
 
-    last_data = []
+    columns_data = []
     print("これからデータを選別します")
     for data in data_list:
         for d in data:
@@ -52,7 +53,10 @@ def write_excel(data_list):
 
             home_team_goal = [d[-3]]
             away_team_goal = [d[-1]]
-            last_data.append(home_team_cp + home_team_st + away_team_cp + away_team_st + home_team_goal + away_team_goal)
+            columns_data.append(home_team_cp + home_team_st + away_team_cp + away_team_st + home_team_goal + away_team_goal)
+
+    # %を削除し、データを文字列から数値に変換する
+    last_data = [[float(d.replace('%', '')) for d in cd] for cd in columns_data]
 
     # エクセル2行目以降に取得したデータを出力
     print("これからエクセルに書き出します")
